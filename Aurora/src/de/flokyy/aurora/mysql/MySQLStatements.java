@@ -72,15 +72,24 @@ public class MySQLStatements {
 		return null;
 	}
 	
-	public static String refreshDatabase() {
+	public static void updateCollectionRoyalty(String server, Double newRoyalty) {
+		Aurora.mysql.update("UPDATE auroraRoyalty SET ROYALTY_AMOUNT='" + newRoyalty + "'WHERE SERVER='" + server + "'");
+	}
+	
+	public static ArrayList getAllServersFromDatabase() {
 		try {
-			ResultSet rs = Aurora.mysql.query("SELECT * FROM auroraRoyalty");
-			if (rs.next()) {
+			ArrayList<String> list = new ArrayList<String>();
+			ResultSet rs = Aurora.mysql.query("SELECT SERVER FROM auroraRoyalty");
+			while (rs.next()) {
+				String s = rs.getString("SERVER");
+				list.add(s);
 			}
-		} catch (SQLException sQLException) {
+			return list;
+		} catch (SQLException localSQLException) {
 		}
 		return null;
 	}
+	
 	
 	public static Double getServerRoyaltyAmount(String server) {
 		try {
