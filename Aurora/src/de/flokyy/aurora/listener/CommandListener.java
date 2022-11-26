@@ -458,12 +458,10 @@ public class CommandListener extends ListenerAdapter {
 																										// that they
 																										// don't open
 																										// multiple
-																										// requests.
-
-					.addPermissionOverride(event.getMember(), EnumSet.of(Permission.VIEW_CHANNEL), null)
-					.addPermissionOverride(event.getMember(), EnumSet.of(Permission.MESSAGE_HISTORY), null)
-					.addPermissionOverride(event.getMember(), EnumSet.of(Permission.USE_APPLICATION_COMMANDS), null)
-					.addPermissionOverride(event.getMember(), EnumSet.of(Permission.MESSAGE_SEND), null)
+			
+			.addPermissionOverride(event.getMember(), EnumSet.of(Permission.VIEW_CHANNEL), null)
+			.addPermissionOverride(event.getGuild().getPublicRole(), null, EnumSet.of(Permission.VIEW_CHANNEL))
+					
 					.queue(channel -> {
 						TextChannel txtChannel = event.getJDA().getTextChannelById(channel.getIdLong());
 
