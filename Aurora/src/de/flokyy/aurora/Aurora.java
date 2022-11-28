@@ -39,6 +39,7 @@ public class Aurora {
 	public static void connectMySQL() {
 	   mysql = new MySQL(MySQL.HOST, MySQL.DATABASE, MySQL.USER, MySQL.PASSWORD);
 	   mysql.update("CREATE TABLE IF NOT EXISTS auroraRoyalty(SERVER text, COLLECTION text, ROYALTY_AMOUNT double, ROLE long, ROYALTY_PERCENTAGE double, VAULT text)");
+	   mysql.update("CREATE TABLE IF NOT EXISTS auroraTransaction(UUID text, MEMBER text, TIMESTAMP long, TOKEN text, SERVER text, NFT text)");
 	}
 	
 	 public static double round(double d, int decimalPlace){

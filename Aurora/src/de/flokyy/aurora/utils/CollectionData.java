@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import de.flokyy.aurora.mysql.MySQLStatements;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -31,6 +32,7 @@ public class CollectionData {
 		return (int) result;
 	}
 
+		
 	
 	//Uses the MagicEden API to get the current floor price of a collection
 	public static Double getCollectionFP(String collection) {

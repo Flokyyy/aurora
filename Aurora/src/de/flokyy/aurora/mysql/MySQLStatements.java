@@ -33,6 +33,15 @@ public class MySQLStatements {
 		Aurora.mysql.update("UPDATE auroraRoyalty SET VAULT='" + vault + "'WHERE SERVER='" + server + "'");
 	}
 	
+	public static void createNewEntry(String uuid, String member, Long timestamp, String token, String server, String nft) {
+		Aurora.mysql.update("INSERT INTO auroraTransaction(UUID) VALUES ('" + uuid + "')");
+		Aurora.mysql.update("UPDATE auroraTransaction SET MEMBER='" + member + "'WHERE UUID='" + uuid + "'");
+		Aurora.mysql.update("UPDATE auroraTransaction SET TIMESTAMP='" + timestamp + "'WHERE UUID='" + uuid + "'");
+		Aurora.mysql.update("UPDATE auroraTransaction SET TOKEN='" + token + "'WHERE UUID='" + uuid + "'");
+		Aurora.mysql.update("UPDATE auroraTransaction SET SERVER='" + server + "'WHERE UUID='" + uuid + "'");
+		Aurora.mysql.update("UPDATE auroraTransaction SET NFT='" + nft + "'WHERE UUID='" + uuid + "'");
+	}
+	
 	public static String getServerVaultWallet(String server) {
 		try {
 			ResultSet rs = Aurora.mysql.query("SELECT VAULT FROM auroraRoyalty WHERE SERVER='" + server + "'");
