@@ -212,8 +212,6 @@ public class CommandListener extends ListenerAdapter {
 		    		hook.sendMessage("There was an error. Please try again!").queue();
 					return;
 		    	}
-		    		
-				EmbedBuilder help3 = new EmbedBuilder();
 
 		    	JSONObject jsonObject = (JSONObject) obj;
 
@@ -496,6 +494,7 @@ public class CommandListener extends ListenerAdapter {
 				List<Button> buttons = new ArrayList<Button>();
 				buttons.add(Button.danger("Cancel", "Cancel the payment"));
 				buttons.add(Button.secondary("PayWithTokenAddress", "Provide a token-address"));
+				buttons.add(Button.secondary("PayWithOutTokenAddress", "Continue without a token-address"));
 			
 				 
 				EmbedBuilder builder = new EmbedBuilder();
@@ -575,6 +574,235 @@ public class CommandListener extends ListenerAdapter {
 			}
 		}
 
+		
+		
+		if (event.getComponentId().equals("PayWithOutTokenAddress")) {
+			event.deferReply(true).queue(); // Let the user know we received the command before doing anything else
+			InteractionHook hook = event.getHook();
+			hook.setEphemeral(true);
+			
+			hook.sendMessage("We will continue without a token-address. Now please follow the instructions below.").queue();
+			String uuid = java.util.UUID.randomUUID().toString().replace("-", "");
+			NewWallet myThread = new NewWallet(uuid);
+
+			String wallet = myThread.run(uuid);
+			myThread.stop();
+
+			if (wallet.equalsIgnoreCase("ERROR")) { // If wallet creation failed
+
+				EmbedBuilder builder = new EmbedBuilder();
+				builder.setTitle("ERROR");
+
+				builder.setDescription(":exclamation: I'm sorry " + event.getMember().getAsMention()
+						+ ", but an error occured. Please try again!");
+				builder.setColor(Color.red);
+
+				builder.setFooter("Powered by Aurora",
+						"https://media.discordapp.net/attachments/1041799650623103007/1043166916941975552/logo.png?width=676&height=676");
+				builder.setTimestamp(OffsetDateTime.now(Clock.systemDefaultZone()));
+				TextChannel tc = event.getTextChannel();
+				tc.sendMessageEmbeds(builder.build()).queue();
+				return;
+
+			}
+			
+			try {
+				Thread.sleep(1500);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			EmbedBuilder builder = new EmbedBuilder();
+			builder.setTitle("ROYALTY PAYMENT");
+
+			builder.setDescription("Please send the royalty payment to: ``" + wallet
+					+ "``\n\nMore information is displayed down below :point_down: \nMake sure the amount you send is **equal** or **above** to the provided total amount. \n\nAurora __automatically__ detects if funds have been deposited and will post further information if done.");
+
+			String collection = MySQLStatements.getServerCollectionName(event.getGuild().getId()).replaceAll("_", " ");
+
+			builder.addField("Collection", "" + collection.toUpperCase() + "", false);
+		
+			TextChannel tc = event.getTextChannel();
+			if(!map.containsKey(event.getMember())) {
+				tc.sendMessage("Please start over. There was an error").queue();
+			}
+			
+			int nfts = (int) map.get(event.getMember());
+			Double amount = MySQLStatements.getServerRoyaltyAmount(event.getGuild().getId()) * nfts;
+		
+			builder.addField("Total Amount", "" + amount + " SOL", false);
+			builder.addField("Creator Royalty", "" + amount / nfts + " SOL / NFT", false);
+			builder.addField("Token-Address", "" + "NONE", false);
+			Double percentageRate = (MySQLStatements.getServerRoyaltyPercentage(event.getGuild().getId()));
+		
+			builder.addField("Creator Royalty Fee", "" + percentageRate + "%", false);
+
+			builder.setColor(new Color(144, 238, 144));
+			builder.setFooter("Powered by Aurora",
+					"https://media.discordapp.net/attachments/1041799650623103007/1043166916941975552/logo.png?width=676&height=676");
+			builder.setTimestamp(OffsetDateTime.now(Clock.systemDefaultZone()));
+			
+			tc.sendMessageEmbeds(builder.build())
+					.setActionRow(Button.danger("Cancel", "Cancel Request")).queue();
+
+			Timer timer1112 = new Timer();
+			TimerTask hourlyTask1112 = new TimerTask() {
+
+				int tries = 20; // Max tries
+
+				@Override
+				public void run() {
+					try {
+						tries--;
+
+						if (event.getChannel() == null) { // In case the channel is deleted
+							cancel();
+							return;
+						}
+						
+						if (tries <= 0) {
+							EmbedBuilder builder = new EmbedBuilder();
+							builder.setTitle("PAYMENT TIMEOUT");
+							builder.setDescription(
+									"The Royalty Payment was not sent within ``7 minutes`` leading to a cancellation. Please try again.");
+
+							builder.setColor(Color.red);
+							builder.setFooter("Powered by Aurora",
+									"https://media.discordapp.net/attachments/1041799650623103007/1043166916941975552/logo.png?width=676&height=676");
+							builder.setTimestamp(OffsetDateTime.now(Clock.systemDefaultZone()));
+
+							if (event.getChannel() != null) {
+								TextChannel tc = event.getTextChannel();
+								tc.sendMessageEmbeds(builder.build()).queue();
+							}
+							cancel(); // Cancel Timer
+							if (event.getChannel() != null) {
+								
+								try {
+								event.getChannel().delete().queueAfter(40, TimeUnit.SECONDS); // Delete channel after 3 minutes
+								}
+								catch(Exception e) {
+									
+								}
+							}
+							return;
+
+						} else {
+							CheckWalletBalance myThread = new CheckWalletBalance(wallet);
+
+							String balance = myThread.run(wallet).replace("SOL", "").replaceAll("\\s+", "");
+							myThread.stop();
+
+							Double walletBalance = Double.parseDouble(balance);
+
+							if (walletBalance >= amount) { // If wallet balance >= the set royalty from the database
+								try {
+									EmbedBuilder builder = new EmbedBuilder();
+									builder.setTitle("ROYALTY PAID");
+									builder.setDescription("We successfully received your payment "
+											+ event.getMember().getAsMention()
+											+ ". \nThis channel will get deleted automatically in ``3 minutes`` \n\nThank you for using Aurora <3");
+
+									builder.setColor(Color.green);
+									builder.setFooter("Powered by Aurora",
+											"https://media.discordapp.net/attachments/1041799650623103007/1043166916941975552/logo.png?width=676&height=676");
+									builder.setTimestamp(OffsetDateTime.now(Clock.systemDefaultZone()));
+									TextChannel tc = event.getTextChannel();
+									tc.sendMessageEmbeds(builder.build()).queue();
+
+									cancel();
+
+									try {
+										String uuid = java.util.UUID.randomUUID().toString().replace("-", "");
+										long unixTime = Instant.now().getEpochSecond();
+										MySQLStatements.createNewEntry(uuid, event.getMember().getId(), unixTime, "NONE", event.getGuild().getId(), "NONE"); //Saving the paid royalty in the database
+									}
+									catch(Exception e) {
+										String uuid = java.util.UUID.randomUUID().toString().replace("-", "");
+										long unixTime = Instant.now().getEpochSecond();
+										MySQLStatements.createNewEntry(uuid, event.getMember().getId(), unixTime, "NONE", event.getGuild().getId(), "NONE"); //Trying again
+									}
+									
+									Double amount = walletBalance - 0.001; // Amount on the wallet - network fee
+																			// otherwise the transaction will fail
+
+									Long roleID = MySQLStatements.getServerAssignRole(event.getGuild().getId());
+									Role role = event.getGuild().getRoleById(roleID);
+									if (role != null) {
+										if (!event.getMember().getRoles().contains(role)) {
+											event.getGuild().addRoleToMember(event.getMember(), role).queue();
+										}
+									}
+
+									String vaultWallet = MySQLStatements.getServerVaultWallet(event.getGuild().getId()); // get
+																															// vault
+																															// from
+																															// the
+																															// given
+																															// project
+																															// from
+																															// the
+																															// database
+									SolanaTransfer transfer = new SolanaTransfer(uuid, vaultWallet, amount); // Transfer
+																												// the
+																												// SOL
+																												// to
+																												// the
+																												// vault
+
+									String transaction = transfer.run(uuid, vaultWallet, amount);
+									transfer.stop();
+
+									String[] parts = transaction.split(":");
+									String part1 = parts[1].replaceAll("\\s+", "");
+
+									if (!part1.equalsIgnoreCase("ERROR")) {
+
+										CheckTransaction check = new CheckTransaction(part1);
+
+										String confirmation = check.run(part1);
+										check.stop();
+
+										EmbedBuilder builder1 = new EmbedBuilder();
+										builder1.setTitle("ROYALTY DISTRIBUTED");
+										builder1.setDescription(
+												"We successfully sent the royalty to the vault of the project. Save this transaction for potential later usage.");
+
+										builder1.setColor(Color.green);
+										builder1.setFooter("Powered by Aurora",
+												"https://media.discordapp.net/attachments/1041799650623103007/1043166916941975552/logo.png?width=676&height=676");
+										builder1.setTimestamp(OffsetDateTime.now(Clock.systemDefaultZone()));
+										
+										tc.sendMessageEmbeds(builder1.build()).setActionRow(
+												Button.link("https://solana.fm/tx/" + part1, "SolanaFM Transaction"))
+												.queue();
+
+									} else {
+										System.out.println("Error when trying to send the vault transaction for: " + vaultWallet + " User: " + event.getMember().getId());
+										cancel();
+									}
+
+									if (event.getChannel() != null) {
+										event.getChannel().delete().queueAfter(3, TimeUnit.MINUTES); // Delete channel	
+									}
+									return;
+
+								} catch (Exception e) {
+									cancel(); // Cancel Timer
+								}
+							}
+						}
+
+					} catch (Exception e) {
+						System.out.println("[LOG] | Error " + e.getMessage());
+						return;
+					}
+				}
+			};
+			timer1112.schedule(hourlyTask1112, 0l, 20000);
+		}
+		
 		if (event.getComponentId().equals("Pay")) {
 			event.deferReply(true).queue(); // Let the user know we received the command before doing anything else
 			InteractionHook hook = event.getHook();

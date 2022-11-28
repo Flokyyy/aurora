@@ -9,9 +9,9 @@ import java.sql.Statement;
 public class MySQL {
 	
 	public static String HOST = "localhost";
-	public static String DATABASE = "****";
-	public static String USER = "****";
-	public static String PASSWORD = "****";	
+	public static String DATABASE = "";
+	public static String USER = "";
+	public static String PASSWORD = "";	
 
 	public static Connection con;
 
