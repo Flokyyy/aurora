@@ -18,8 +18,8 @@
 - Follow the process described in [Royalty Payment Process](https://github.com/Flokyyy/aurora#-royalty-payment-process).
 - Once the Royalty is paid the Orb will be unlocked.
 
-:tada: # 1 Minute video overview
-- https://youtu.be/IiQR_q8O7RY
+# 🎉 1 Minute video overview
+- https://youtube.com/IiQR_q8O7RY
 
 # ⚙️ Aurora Features
 🔋 | Fully Automatic 
