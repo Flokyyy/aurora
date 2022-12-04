@@ -7,8 +7,9 @@
 - With the help of our tool, projects can again demand flexible royalties from their users in the long term without giving anyone access to the update-authority, as Aurora is self-hosted and update-authorities therefore stay in the hands of each project.
 
 # 💡 Demo
-- Aurora can be tested inside our discord: https://discord.gg/q7pJcPgvKz 
-
+- Aurora can be tested inside our discord: https://discord.gg/q7pJcPgvKz (Royalties are paid for: NexiLabs) https://magiceden.io/marketplace/nexilabs
+- If you want to live test the tool head over to MagicEden and buy a Nexi Orb without any royalties. The Orb will be locked afterwards. Join our discord:  
+https://discord.gg/UeHDvRkv. Click on the "Pay-Royalty" channel. And then just follow the process described in (# 💸 Royalty Payment Process)
 # 1 Minute video overview
 - New Video coming
 
