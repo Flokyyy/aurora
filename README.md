@@ -12,7 +12,7 @@
 - Once the Royalty is paid the Orb will be unlocked.
 
 # 🎉 1 Minute video overview
-- https://youtu.be/IiQR_q8O7RY
+- [https://youtu.be/IiQR_q8O7RY](https://www.youtube.com/watch?v=IiQR_q8O7RY)
 
 # ⚙️ Aurora Features
 🔋 | Fully Automatic 
