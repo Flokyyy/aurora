@@ -94,7 +94,7 @@
 - Is this kind of payment secure? Yes, this method is even much more secure than current models, since the user's wallet does not come into direct contact with any of our smart contracts, since no login or signing is required. Users only need to send a transaction to a given address.
 
 # Solana transactions for Java
-- Because there is no direct API for Java we used the Solana Cli (https://docs.solana.com/cli/install-solana-cli-tools) in order to perform transactions on the Solana Blockchain. So make sure to have the Solana Cli installed if you use ever use Aurora's code outside the general installation. 
+- Because there is no direct API for Java we used the Solana Cli or Metaboss in order to perform transactions on the Solana Blockchain. So make sure to have those tools installed if you selfhost Aurora. 
 
 # Contact
 - Twitter: https://twitter.com/SolFloky
