@@ -68,7 +68,7 @@
 - You will need to enter the transaction of your nft sale.
 
 - Once you provided the transaction Aurora will send you the main details for the payment processs.
-![Screenshot (1253)](https://user-images.githubusercontent.com/68162827/205496235-d5f5091a-c633-4594-90ef-3cbd21c3760d.png)
+![Screenshot (1261)](https://user-images.githubusercontent.com/68162827/205521135-1f19dc16-f524-4f3d-8810-c8f02b68bd91.png)
 
 # Default URI Template
 - This is the default URI template which is used for the metadata change. 
