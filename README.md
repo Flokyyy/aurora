@@ -33,7 +33,7 @@
 
 1. Install [Solana-CLI](https://docs.solana.com/cli/install-solana-cli-tools)
 2. Install [Metaboss](https://github.com/samuelvanderwaal/metaboss)
-3. Change all variables inside the [Data.java](/Aurora/src/de/flokyy/aurora/utils/Data.java) file
+3. Change all variables inside the [Data.java](/Flokyyy/aurora/blob/main/AuroraV2/src/de/flokyy/aurora/utils/Data.java) file
    - update_authority: Your collections's update authority (e.g ``4CjQRsuLEZBRQngXDAv9CqYtop94SBui3mboA5Ya7y9H``)
    - collection: Your collection symbol (e.g ``nexilabs``)
    - creator_royalty: Charged Royalty Amount (``0.01 = 1%, 0.05 = 5%, 0.1 = 10%``)
