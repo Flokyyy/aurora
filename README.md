@@ -12,7 +12,7 @@
 - If you want to live test the tool head over to MagicEden and buy a Nexi Orb without any royalties. The Orb will be locked afterwards. 
 - Join the NexiLabs Discord and click on the "Pay-Royalty" channel. 
 - Follow the process described in [Royalty Payment Process](https://github.com/Flokyyy/aurora#-royalty-payment-process).
-- Once the Royalty is paid the Orbs will be unlocked.
+- Once the Royalty is paid the Orb will be unlocked.
 
 # 1 Minute video overview
 - New Video coming
