@@ -25,8 +25,8 @@
 - You don't want to connect your wallet to any site? No worries we got you covered. 
 - With Aurora you can pay the Creator Royalty inside the project's discord by sending a simple transaction to a given wallet. More information is provided in the [Royalty Payment Process](https://github.com/Flokyyy/aurora#-royalty-payment-process).
 
-📙 | Wide Range 
-- Aurora supports all Solana collections.
+📙 | Global Support 
+- Aurora can be used with all Solana collections.
 
 🔑 | Automatic Metadata Update
 - Aurora updates the metadata (URI) so users are forced to pay royalties.
