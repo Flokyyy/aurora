@@ -9,7 +9,7 @@
 # 💡 Demo
 - Aurora can be tested inside our discord: https://discord.gg/q7pJcPgvKz (Royalties are paid for: NexiLabs) https://magiceden.io/marketplace/nexilabs
 - If you want to live test the tool head over to MagicEden and buy a Nexi Orb without any royalties. The Orb will be locked afterwards. Join our discord:  
-https://discord.gg/UeHDvRkv. Click on the "Pay-Royalty" channel. And then just follow the process described in [anchor](#💸 Royalty Payment Process)
+https://discord.gg/UeHDvRkv. Click on the "Pay-Royalty" channel. And then just follow the process described in [Royalty Payment Process](#💸 Royalty Payment Process)
 # 1 Minute video overview
 - New Video coming
 
