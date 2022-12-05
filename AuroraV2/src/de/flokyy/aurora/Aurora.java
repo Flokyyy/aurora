@@ -15,7 +15,6 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 
 public class Aurora {
 
-	public static boolean startup;
 	public static JDABuilder builder;
 	public static JDA jda;
 	
@@ -31,7 +30,7 @@ public class Aurora {
 	   mysql.update("CREATE TABLE IF NOT EXISTS auroraTransactions(UUID text, MEMBER text, TIMESTAMP long, TOKEN text, SERVER text, ROYALTY_AMOUNT double, TRANSACTION text)");
 	}
 	
-	public static void main(String[] args) {
+	public void main(String[] args) {
 		try {
 			Aurora.connectMySQL(); // Connect to database
 		} catch (Exception e) {
