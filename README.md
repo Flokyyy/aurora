@@ -48,8 +48,8 @@
    - Update the database details in [MySQL.java](/AuroraV2/src/de/flokyy/aurora/mysql/MySQL.java)
    - Store the update-authority key inside the same directly where the .jar file is running from (Key must be called ``key.json``) 
    Example-Key:                 ```[4,182,130,247,119,117,227,207,112,73,170,126,222,197,244,99,215,107,255,202,33,43,36,17,104,111,157,246,196,192,174,95,240,23,238,206,118,215,154,238,229,96,11,37,156,123,51,223,5,231,17,117,86,136,103,14,75,95,175,132,148,54,1,46]```
-6. Export the code as a runnable jar file.
-7. Update the Discord Secret Key in [Aurora.java](/AuroraV2/src/de/flokyy/aurora/Aurora.java)
+6. Update the Discord Secret Key in [Aurora.java](/AuroraV2/src/de/flokyy/aurora/Aurora.java)
+7. Export the code as a runnable jar file.
 8. Invite the Bot to your discord (https://discord.com/oauth2/authorize?permissions=8&scope=bot+applications.commands&client_id=YOURCLIENTIDEHERE)
 - Permissions for Aurora are automatically assigned through the invite (Administrator), otherwise manually add them. 
 
