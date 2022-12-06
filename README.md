@@ -63,6 +63,14 @@
 
 9. Your finished! Please do a demo payment in order to test you setup your vault-wallet correctly. 
 
+# Default URI Template
+- This is the default URI template which is used for the metadata change. 
+- This json file must be uploaded and needs to be accessable all time. We therefore suggest uploading this to Arweave etc.
+- Make sure to change all required fields before using this, otherwise your metadata can get screwed up.
+```
+{"name":"Locked NFT","image":"https://media.discordapp.net/attachments/1041799650623103007/1048662599832719360/royaltyprotection.png","symbol":"SYMBOL","attributes":[{"value":"Not Paid","trait_type":"Royalty"}],"properties":{"files":[{"uri":"https://media.discordapp.net/attachments/1041799650623103007/1048662599832719360/royaltyprotection.png","type":"image"}],"category":"image","creators":[{"share":100,"address":"YOURCREATORADDRESS"}]},"description":"This NFT is locked due to not paying creator royalties.","seller_fee_basis_points":1000}
+```
+
 # 💸 Royalty Payment Process
 - Once you click on "Pay Royalty" Aurora will automatically create a new channel for the royalty payment process. 
 ![Screenshot (1240)](https://user-images.githubusercontent.com/68162827/205489625-360b5daf-130b-48ac-8f63-5893891e920d.png)
@@ -73,14 +81,6 @@
 
 - Once you provided the transaction Aurora will send you the main details for the payment processs.
 ![Screenshot (1261)](https://user-images.githubusercontent.com/68162827/205521135-1f19dc16-f524-4f3d-8810-c8f02b68bd91.png)
-
-# Default URI Template
-- This is the default URI template which is used for the metadata change. 
-- This json file must be uploaded and needs to be accessable all time. We therefore suggest uploading this to Arweave etc.
-- Make sure to change all required fields before using this, otherwise your metadata can get screwed up.
-```
-{"name":"Locked NFT","image":"https://media.discordapp.net/attachments/1041799650623103007/1048662599832719360/royaltyprotection.png","symbol":"SYMBOL","attributes":[{"value":"Not Paid","trait_type":"Royalty"}],"properties":{"files":[{"uri":"https://media.discordapp.net/attachments/1041799650623103007/1048662599832719360/royaltyprotection.png","type":"image"}],"category":"image","creators":[{"share":100,"address":"YOURCREATORADDRESS"}]},"description":"This NFT is locked due to not paying creator royalties.","seller_fee_basis_points":1000}
-```
 
 # 💰 Paid Royalty:
 - If you paid the Royalty Aurora will automatically detect this and will sent the royalty to the projects vault.
