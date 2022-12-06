@@ -244,7 +244,7 @@ public class CommandListener extends ListenerAdapter {
 											shouldCloseChannel = true;
 										}
 									}
-									else { //Successfully updated the metadata to a locked NFT
+									else { //Successfully updated the metadata to a unlocked NFT
 										
 										EmbedBuilder builder1 = new EmbedBuilder();
 										builder1.setTitle("NFT UNLOCKED");
