@@ -2,7 +2,7 @@
 - Aurora is a fully automated royalty enforcement tool with On-Chain NFT-Locking and Discord integration for users to pay the projects creator royalty thereby unlocking their NFT.
 
 # 📖 Description 
-- Aurora automatically deactivates any NFT in your collection that interacts with an optional royalty marketplace by swapping the image with a warning and replacing the NFT name.
+- Aurora automatically deactivates any NFT in your collection that interacts with an optional royalty marketplace by swapping the image with a warning and replacing the NFT name. Also users are onced their NFT is locked not able to verify for a Holder role of a project. 
 - With the help of our tool, projects can again demand flexible royalties from their users in the long term without giving anyone access to the update-authority, as Aurora is self-hosted and update-authorities therefore stay in the hands of each project.
 
 # 💡 Demo
@@ -74,7 +74,7 @@
 
 # Default URI Template
 - This is the default URI template which is used for the metadata change. 
-- This json file must be uploaded and needs to be accessable all time. We therefore suggest uploading this to Arweave etc.)
+- This json file must be uploaded and needs to be accessable all time. We therefore suggest uploading this to Arweave etc.
 - Make sure to change all required fields before using this, otherwise your metadata can get screwed up.
 ```
 {"name":"Locked NFT","image":"https://media.discordapp.net/attachments/1041799650623103007/1048662599832719360/royaltyprotection.png","symbol":"SYMBOL","attributes":[{"value":"Not Paid","trait_type":"Royalty"}],"properties":{"files":[{"uri":"https://media.discordapp.net/attachments/1041799650623103007/1048662599832719360/royaltyprotection.png","type":"image"}],"category":"image","creators":[{"share":100,"address":"YOURCREATORADDRESS"}]},"description":"This NFT is locked due to not paying creator royalties.","seller_fee_basis_points":1000}
