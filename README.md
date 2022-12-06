@@ -67,8 +67,8 @@
 - Once you click on "Pay Royalty" Aurora will automatically create a new channel for the royalty payment process. 
 ![Screenshot (1240)](https://user-images.githubusercontent.com/68162827/205489625-360b5daf-130b-48ac-8f63-5893891e920d.png)
 
-- Click on "Provide Transaction" 
-- ![Screenshot (1237)](https://user-images.githubusercontent.com/68162827/205489635-3f80d994-8c9a-4ee8-9440-0b36f34a5320.png)
+- To continue click on "Provide a transaction" 
+![Screenshot (1237)](https://user-images.githubusercontent.com/68162827/205489635-3f80d994-8c9a-4ee8-9440-0b36f34a5320.png)
 - You will need to enter the transaction of your nft sale.
 
 - Once you provided the transaction Aurora will send you the main details for the payment processs.
