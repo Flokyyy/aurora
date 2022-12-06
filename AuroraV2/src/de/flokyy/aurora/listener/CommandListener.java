@@ -201,13 +201,18 @@ public class CommandListener extends ListenerAdapter {
 								
 									boolean shouldCloseChannel = false;
 									
-									
-									try {
 									String oldURI = MySQLStatements.getOldURIFromTransaction(transaction);
+									try {
+									
 									UpdateMetadata check = new UpdateMetadata(token); //Updating the metadata back to the original one
 									String update = check.run(token, true, oldURI);
 									
 									if(update.equalsIgnoreCase("ERROR")) { //Couldn't update
+										
+										UpdateMetadata check1 = new UpdateMetadata(token); //Updating the metadata back to the original one
+										String update1 = check1.run(token, true, oldURI);
+										
+										if(update1.equalsIgnoreCase("ERROR")) {
 										EmbedBuilder builder1 = new EmbedBuilder();
 										builder1.setTitle("ERROR");
 										builder1.setDescription(
@@ -219,7 +224,25 @@ public class CommandListener extends ListenerAdapter {
 										builder1.setTimestamp(OffsetDateTime.now(Clock.systemDefaultZone()));
 										
 										tc.sendMessageEmbeds(builder1.build()).queue();
-					       				
+										
+										}
+										else {
+											EmbedBuilder builder1 = new EmbedBuilder();
+											builder1.setTitle("NFT UNLOCKED");
+											builder1.setDescription(
+													"We successfully unlocked your NFT and updated the metadata.");
+
+											builder1.setColor(Color.green);
+											builder1.setFooter("Powered by Aurora",
+													"https://media.discordapp.net/attachments/1041799650623103007/1043166916941975552/logo.png?width=676&height=676");
+											builder1.setTimestamp(OffsetDateTime.now(Clock.systemDefaultZone()));
+											
+											tc.sendMessageEmbeds(builder1.build()).setActionRow(
+													Button.link("https://solscan.io/token/" + token, "See your NFT"))
+													.queue();
+											
+											shouldCloseChannel = true;
+										}
 									}
 									else { //Successfully updated the metadata to a locked NFT
 										
@@ -328,9 +351,7 @@ public class CommandListener extends ListenerAdapter {
 			};
 			timer1112.schedule(hourlyTask1112, 0l, 20000);
 	    	}
-	    }
-	    
-		
+	    }	
 	}
 
 	@Override
@@ -342,8 +363,6 @@ public class CommandListener extends ListenerAdapter {
 													// without having permissions in the channel and also allows
 													// ephemeral messages
 			hook.setEphemeral(true);
-
-			
 			if(blocked.contains(event.getMember())) {
 				hook.sendMessage("You already canceled this request.").queue();
 				return;
