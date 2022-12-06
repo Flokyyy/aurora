@@ -37,8 +37,10 @@
 🔓 | Automatic Unlock
 - Automatic unlocks the NFT once the Creator Royalty is paid by the user and updates the metadata to the original URI.
 
-# 💻 Installation
+🌐 | Database Support
+- Aurora saves all transaction inside a MySQL database for later usage.
 
+# 💻 Installation
 1. Install [Solana-CLI](https://docs.solana.com/cli/install-solana-cli-tools)
 2. Install [Metaboss](https://github.com/samuelvanderwaal/metaboss)
 3. Change all variables inside the [Data.java](/AuroraV2/src/de/flokyy/aurora/utils/Data.java) file
