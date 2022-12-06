@@ -68,8 +68,8 @@
 ![Screenshot (1240)](https://user-images.githubusercontent.com/68162827/205489625-360b5daf-130b-48ac-8f63-5893891e920d.png)
 
 - To continue click on "Provide a transaction" 
-![Screenshot (1237)](https://user-images.githubusercontent.com/68162827/205489635-3f80d994-8c9a-4ee8-9440-0b36f34a5320.png)
 - You will need to enter the transaction of your nft sale.
+![Screenshot (1237)](https://user-images.githubusercontent.com/68162827/205489635-3f80d994-8c9a-4ee8-9440-0b36f34a5320.png)
 
 - Once you provided the transaction Aurora will send you the main details for the payment processs.
 ![Screenshot (1261)](https://user-images.githubusercontent.com/68162827/205521135-1f19dc16-f524-4f3d-8810-c8f02b68bd91.png)
