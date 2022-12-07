@@ -11,6 +11,7 @@ import org.json.simple.parser.JSONParser;
 import de.flokyy.aurora.Aurora;
 import de.flokyy.aurora.mysql.MySQLStatements;
 import de.flokyy.aurora.solana.UpdateMetadata;
+import net.dv8tion.jda.api.entities.TextChannel;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -112,12 +113,12 @@ public class CollectionData {
       		}
       		
        		if(royalty == 0.0 || royalty == 0) { // Royalty was not paid
-       		 if(!MySQLStatements.cacheTransactionExists(signature)) { //If transaction wasn't saved yet in the database
+       		 //If transaction wasn't saved yet in the database
        			 
        			System.out.println("New transaction found. Try to save..."); 
        			
        			if(updatedURI.equalsIgnoreCase(Data.default_UriLink)) {
-					System.out.println("Found an entry, but old uri is equal to the default seems like it already has been locked. Skipping..");
+					System.out.println("Found an entry, but old uri is equal to the default seems like it already has been locked. Skipping.."); //Already locked
 					continue;
 				}
 	       		try { 
@@ -125,33 +126,44 @@ public class CollectionData {
 
 					String update = check.run(mint, false, "EMPTY");
 					
+					if(!MySQLStatements.cacheTransactionExists(signature)) {
+						Aurora.mysql.update("INSERT INTO auroraCache(TRANSACTION) VALUES ('" + signature + "')");
+			       		Aurora.mysql.update("UPDATE auroraCache SET TOKEN='" + mint + "'WHERE TRANSACTION='" + signature + "'");
+			       		Aurora.mysql.update("UPDATE auroraCache SET PAID_ROYALTY='" + 0.0 + "'WHERE TRANSACTION='" + signature + "'");
+			       		Aurora.mysql.update("UPDATE auroraCache SET SALE_PRICE='" + nftPrice + "'WHERE TRANSACTION='" + signature + "'");
+			       		Aurora.mysql.update("UPDATE auroraCache SET OWED_ROYALTY='" + owedRoyalty + "'WHERE TRANSACTION='" + signature + "'");
+			       		Aurora.mysql.update("UPDATE auroraCache SET OLD_URI='" + updatedURI + "'WHERE TRANSACTION='" + signature + "'");
+					}
+					
 					if(update.equalsIgnoreCase("ERROR")) { //Couldn't update
-						System.out.println("Error when trying to lock metadata from token: " + mint);
+						
+			    		System.out.println("Error when trying to lock metadata from token: " + mint + "... trying again!");
+			       		UpdateMetadata check1 = new UpdateMetadata(mint); //Trying to update the metadata again
+
+						String update1 = check1.run(mint, false, "EMPTY");
+						if(!update1.equalsIgnoreCase("ERROR")) {
+							System.out.println("Success!");	
+						}
+						else {
+							System.out.println("Transaction failed again!");	
+						}
 	       				continue;
 					}
-					else { //Successfully updated the metadata to a locked NFT
-					Aurora.mysql.update("INSERT INTO auroraCache(TRANSACTION) VALUES ('" + signature + "')");
-		       		Aurora.mysql.update("UPDATE auroraCache SET TOKEN='" + mint + "'WHERE TRANSACTION='" + signature + "'");
-		       		Aurora.mysql.update("UPDATE auroraCache SET PAID_ROYALTY='" + 0.0 + "'WHERE TRANSACTION='" + signature + "'");
-		       		Aurora.mysql.update("UPDATE auroraCache SET SALE_PRICE='" + nftPrice + "'WHERE TRANSACTION='" + signature + "'");
-		       		Aurora.mysql.update("UPDATE auroraCache SET OWED_ROYALTY='" + owedRoyalty + "'WHERE TRANSACTION='" + signature + "'");
-		       		Aurora.mysql.update("UPDATE auroraCache SET OLD_URI='" + updatedURI + "'WHERE TRANSACTION='" + signature + "'");
-		       			
+					else {
 		       		System.out.println("Successfully updated metadata for: " + mint);
 		       		System.out.println("Saved new entry with transaction: " + signature);
+		       		
+		       		
+//		       		TextChannel tc = Aurora.jda.getTextChannelById(1049039083806150686L);
+//		       		tc.sendMessage("New Orbs got locked: TOKEN: " + mint + " | PRICE: " + nftPrice + " SOL | " +  "TRANSACTION: " + signature).queue();
 					continue;
 					}
+					
 	       			}
-	       			catch(Exception e) { //Couldn't update
-	       				System.out.println("Error when trying to lock metadata from token: " + mint);
+	       			catch(Exception e) { 
 	       				continue;
 	       			}
-
-       			}
-       		}
-       		
-       		
-          
+       		 }
             }
            
   	        
