@@ -1,5 +1,5 @@
 ## 💎 Aurora Royalty Enforcement
-- Aurora is a fully automated royalty enforcement tool with On-Chain NFT-Locking and Discord integration for users to pay the projects creator royalty thereby unlocking their NFT.
+- Aurora is a fully automated royalty enforcement tool with On-Chain NFT-Locking and Discord integration for users to pay the project's creator royalty, thereby unlocking their NFT.
 
 # 📖 Description 
 - Aurora automatically deactivates any NFT in your collection that interacts with an optional royalty marketplace by swapping the image with a warning and replacing the NFT name. Also users are onced their NFT is locked not able to verify for a Holder role of a project. 
