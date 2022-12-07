@@ -46,7 +46,7 @@ public class CommandListener extends ListenerAdapter {
 	public String updateMetadata(String token, boolean originalMetadata, String oldURI, int tries) {
 		if(tries != 4) {
 		UpdateMetadata check = new UpdateMetadata(token); //Updating the metadata back to the original one
-		String update = check.run(token, true, oldURI);
+		String update = check.run(token, originalMetadata, oldURI);
 		
 		if(update.equalsIgnoreCase("ERROR")) { //Couldn't update
 			updateMetadata(token, originalMetadata, oldURI, tries + 1);
@@ -247,8 +247,7 @@ public class CommandListener extends ListenerAdapter {
 									String oldURI = MySQLStatements.getOldURIFromTransaction(transaction);
 									try {
 									
-									UpdateMetadata check = new UpdateMetadata(token); //Updating the metadata back to the original one
-									String update = check.run(token, true, oldURI);
+									String update = updateMetadata(token, true, oldURI, 1);
 									
 									if(!update.equalsIgnoreCase("ERROR")) { //Successfully updated the metadata to a locked NFT
 										
