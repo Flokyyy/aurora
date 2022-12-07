@@ -43,6 +43,49 @@ public class CommandListener extends ListenerAdapter {
 		return bd.doubleValue();
 	}
 	 
+	public String updateMetadata(String token, boolean originalMetadata, String oldURI, int tries) {
+		if(tries != 4) {
+		UpdateMetadata check = new UpdateMetadata(token); //Updating the metadata back to the original one
+		String update = check.run(token, true, oldURI);
+		
+		if(update.equalsIgnoreCase("ERROR")) { //Couldn't update
+			updateMetadata(token, originalMetadata, oldURI, tries + 1);
+		}
+		else {
+			return update;
+		   }
+		}
+		return "ERROR";
+	}
+	
+	public String sendVaultTransaction(String uuid, String vaultWallet, Double amount, int tries) {
+		if(tries != 4) {
+					SolanaTransfer transfer = new SolanaTransfer(uuid, vaultWallet, amount); // Transfer
+					// the
+					// SOL
+					// to
+					// the
+					// vault
+		
+		String transaction = transfer.run(uuid, vaultWallet, amount);
+		transfer.stop();
+		
+		String[] parts = transaction.split(":");
+		String part1 = parts[1].replaceAll("\\s+", "");
+		
+		if (!part1.equalsIgnoreCase("ERROR")) {
+		return part1;
+		
+		}
+		
+		else {
+			sendVaultTransaction(uuid, vaultWallet, amount, tries + 1);
+		  }
+		}
+		return "ERROR";
+
+	}
+	
 	@Override
 	public void onModalInteraction(ModalInteractionEvent event) {
 		event.deferReply(true).queue(); // Let the user know we received the command before doing anything else
@@ -207,26 +250,8 @@ public class CommandListener extends ListenerAdapter {
 									UpdateMetadata check = new UpdateMetadata(token); //Updating the metadata back to the original one
 									String update = check.run(token, true, oldURI);
 									
-									if(update.equalsIgnoreCase("ERROR")) { //Couldn't update
+									if(!update.equalsIgnoreCase("ERROR")) { //Successfully updated the metadata to a locked NFT
 										
-										UpdateMetadata check1 = new UpdateMetadata(token); //Updating the metadata back to the original one
-										String update1 = check1.run(token, true, oldURI);
-										
-										if(update1.equalsIgnoreCase("ERROR")) {
-										EmbedBuilder builder1 = new EmbedBuilder();
-										builder1.setTitle("ERROR");
-										builder1.setDescription(
-												"Aurora couldn't unlock your NFT. Please contact the support from the project and ask for a manual unlock.");
-
-										builder1.setColor(Color.red);
-										builder1.setFooter("Powered by Aurora",
-												"https://media.discordapp.net/attachments/1041799650623103007/1043166916941975552/logo.png?width=676&height=676");
-										builder1.setTimestamp(OffsetDateTime.now(Clock.systemDefaultZone()));
-										
-										tc.sendMessageEmbeds(builder1.build()).queue();
-										
-										}
-										else {
 											EmbedBuilder builder1 = new EmbedBuilder();
 											builder1.setTitle("NFT UNLOCKED");
 											builder1.setDescription(
@@ -243,27 +268,24 @@ public class CommandListener extends ListenerAdapter {
 											
 											shouldCloseChannel = true;
 										}
-									}
-									else { //Successfully updated the metadata to a unlocked NFT
+									
+									
+									else { 
 										
 										EmbedBuilder builder1 = new EmbedBuilder();
-										builder1.setTitle("NFT UNLOCKED");
+										builder1.setTitle("ERROR");
 										builder1.setDescription(
-												"We successfully unlocked your NFT and updated the metadata.");
+												"We could not update your NFT. Please contact the support for a manual unlock!");
 
-										builder1.setColor(Color.green);
+										builder1.setColor(Color.red);
 										builder1.setFooter("Powered by Aurora",
 												"https://media.discordapp.net/attachments/1041799650623103007/1043166916941975552/logo.png?width=676&height=676");
 										builder1.setTimestamp(OffsetDateTime.now(Clock.systemDefaultZone()));
 										
-										tc.sendMessageEmbeds(builder1.build()).setActionRow(
-												Button.link("https://solscan.io/token/" + token, "See your NFT"))
-												.queue();
+										tc.sendMessageEmbeds(builder1.build())		
+										.queue();
 										
 										shouldCloseChannel = true;
-						       	
-						       	
-								
 									}
 									
 					       			}
@@ -289,28 +311,16 @@ public class CommandListener extends ListenerAdapter {
 
 									String vaultWallet = Data.vault_wallet; // Getting the vault wallet from the data class
 									
-									SolanaTransfer transfer = new SolanaTransfer(uuid, vaultWallet, amount); // Transfer
-																												// the
-																												// SOL
-																												// to
-																												// the
-																												// vault
+									String response = sendVaultTransaction(uuid, vaultWallet, amount, 1);
+								
 
-									String transaction = transfer.run(uuid, vaultWallet, amount);
-									transfer.stop();
+									if (!response.equalsIgnoreCase("ERROR")) {
 
-									String[] parts = transaction.split(":");
-									String part1 = parts[1].replaceAll("\\s+", "");
+										CheckTransaction check = new CheckTransaction(response);
 
-									if (!part1.equalsIgnoreCase("ERROR")) {
-
-										CheckTransaction check = new CheckTransaction(part1);
-
-										String confirmation = check.run(part1);
+										String confirmation = check.run(response);
 										check.stop();
 
-										
-										
 										EmbedBuilder builder1 = new EmbedBuilder();
 										builder1.setTitle("ROYALTY DISTRIBUTED");
 										builder1.setDescription(
@@ -322,11 +332,11 @@ public class CommandListener extends ListenerAdapter {
 										builder1.setTimestamp(OffsetDateTime.now(Clock.systemDefaultZone()));
 										
 										tc.sendMessageEmbeds(builder1.build()).setActionRow(
-												Button.link("https://solana.fm/tx/" + part1, "SolanaFM Transaction"))
+												Button.link("https://solana.fm/tx/" + response, "SolanaFM Transaction"))
 												.queue();
 
-									} else {
-										System.out.println("Error when trying to send the vault transaction for: " + vaultWallet + " User: " + event.getMember().getId());
+									} else { 
+										System.out.println("ERROR | Couldn't send the royalty to the project vault. Please send the royalties manually: (UUID): " + uuid);
 										cancel();
 									}
 
@@ -351,7 +361,9 @@ public class CommandListener extends ListenerAdapter {
 			};
 			timer1112.schedule(hourlyTask1112, 0l, 20000);
 	    	}
-	    }	
+	    }
+	    
+		
 	}
 
 	@Override
@@ -363,6 +375,8 @@ public class CommandListener extends ListenerAdapter {
 													// without having permissions in the channel and also allows
 													// ephemeral messages
 			hook.setEphemeral(true);
+
+			
 			if(blocked.contains(event.getMember())) {
 				hook.sendMessage("You already canceled this request.").queue();
 				return;
