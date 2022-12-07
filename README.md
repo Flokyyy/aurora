@@ -68,7 +68,7 @@
 - This json file must be uploaded and needs to be accessable all time. We therefore suggest uploading this to Arweave etc.
 - Make sure to change all required fields before using this, otherwise your metadata can get screwed up.
 ```
-{"name":"Locked NFT","image":"https://media.discordapp.net/attachments/1041799650623103007/1048662599832719360/royaltyprotection.png","symbol":"SYMBOL","attributes":[{"value":"Not Paid","trait_type":"Royalty"}],"properties":{"files":[{"uri":"https://media.discordapp.net/attachments/1041799650623103007/1048662599832719360/royaltyprotection.png","type":"image"}],"category":"image","creators":[{"share":100,"address":"YOURCREATORADDRESS"}]},"description":"This NFT is locked due to not paying creator royalties.","seller_fee_basis_points":1000}
+{"name":"Locked NFT","image":"https://media.discordapp.net/attachments/1048663249488453693/1050149055973556224/auroralogo.png","symbol":"SYMBOL","attributes":[{"value":"Not Paid","trait_type":"Royalty"}],"properties":{"files":[{"uri":"https://media.discordapp.net/attachments/1048663249488453693/1050149055973556224/auroralogo.png","type":"image"}],"category":"image","creators":[{"share":100,"address":"YOURCREATORADDRESS"}]},"description":"This NFT is locked due to not paying creator royalties.","seller_fee_basis_points":1000}
 ```
 
 # 💸 Royalty Payment Process
