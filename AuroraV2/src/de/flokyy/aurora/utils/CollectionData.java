@@ -114,20 +114,15 @@ public class CollectionData {
       		
        		if(royalty == 0.0 || royalty == 0) { // Royalty was not paid
        		 //If transaction wasn't saved yet in the database
-       			 
-       			System.out.println("New transaction found. Try to save..."); 
        			
        			if(MySQLStatements.metadataAlreadyChanged(signature)) {	
-       				System.out.println("Found an entry, metadata has already been changed for it"); //Already locked
+       			    //Already locked and metadata was updated
 					continue;
        			}
-       			if(updatedURI.equalsIgnoreCase(Data.default_UriLink)) {
-					System.out.println("Found an entry, but old uri is equal to the default seems like it already has been locked. Skipping.."); //Already locked
-					if(!MySQLStatements.metadataAlreadyChanged(signature)) {	
-					   MySQLStatements.metaDataSaved(signature, mint, updatedURI);
-					}
-
-					continue;
+       			if(MySQLStatements.paidTransactionExists(signature)) {
+       				 //Already paid the royalty with aurora
+       				continue;
+       			
 				}
 	       		try { 
 	       			UpdateMetadata check = new UpdateMetadata(mint); // Else we are updating the metadata
@@ -158,9 +153,9 @@ public class CollectionData {
 					}
 					else {
 						
-				if(!MySQLStatements.metadataAlreadyChanged(signature)) {	
-					MySQLStatements.metaDataSaved(signature, mint, updatedURI);
-				}
+					if(!MySQLStatements.metadataAlreadyChanged(signature)) {	
+					   MySQLStatements.metaDataSaved(signature, mint, updatedURI);
+					}
 		       		System.out.println("Successfully updated metadata for: " + mint);
 		       		System.out.println("Saved new entry with transaction: " + signature);
 		       		
