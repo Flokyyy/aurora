@@ -59,9 +59,9 @@ public class CollectionData {
 			
 			
 		
-			JSONParser parser = new JSONParser();
+	    JSONParser parser = new JSONParser();
 
-			Object obj = parser.parse(s);
+	    Object obj = parser.parse(s);
             JSONArray array = (JSONArray)obj;
     	    
             for(Object ob : array) {
@@ -149,13 +149,13 @@ public class CollectionData {
 			    		System.out.println("Error when trying to lock metadata from token: " + mint + "... trying again!");
 			       		UpdateMetadata check1 = new UpdateMetadata(mint); //Trying to update the metadata again
 
-						String update1 = check1.run(mint, false, "EMPTY");
-						if(!update1.equalsIgnoreCase("ERROR")) {
-							System.out.println("Success!");	
-						}
-						else {
-							System.out.println("Transaction failed again!");	
-						}
+					String update1 = check1.run(mint, false, "EMPTY");
+					if(!update1.equalsIgnoreCase("ERROR")) {
+						System.out.println("Success!");	
+					}
+					else {
+						System.out.println("Transaction failed again!");	
+					}
 	       				continue;
 					}
 					else {
@@ -163,8 +163,8 @@ public class CollectionData {
 					if(!MySQLStatements.metadataAlreadyChanged(signature)) {	
 					   MySQLStatements.metaDataSaved(signature, mint, updatedURI);
 					}
-		       		System.out.println("Successfully updated metadata for: " + mint);
-		       		System.out.println("Saved new entry with transaction: " + signature);
+		       			System.out.println("Successfully updated metadata for: " + mint);
+					System.out.println("Saved new entry with transaction: " + signature);
 		       		
 		       		
 //		       		TextChannel tc = Aurora.jda.getTextChannelById(1049039083806150686L);
@@ -176,8 +176,8 @@ public class CollectionData {
 	       			catch(Exception e) { 
 	       				continue;
 	       			}
-       		 }
-            }
+			 }
+                }
            
   	        
 		}
