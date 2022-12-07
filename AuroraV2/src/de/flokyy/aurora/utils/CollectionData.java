@@ -117,22 +117,31 @@ public class CollectionData {
        			 
        			System.out.println("New transaction found. Try to save..."); 
        			
+       			if(MySQLStatements.metadataAlreadyChanged(signature)) {	
+       				System.out.println("Found an entry, metadata has already been changed for it"); //Already locked
+					continue;
+       			}
        			if(updatedURI.equalsIgnoreCase(Data.default_UriLink)) {
 					System.out.println("Found an entry, but old uri is equal to the default seems like it already has been locked. Skipping.."); //Already locked
+					if(!MySQLStatements.metadataAlreadyChanged(signature)) {	
+					   MySQLStatements.metaDataSaved(signature, mint, updatedURI);
+					}
+
 					continue;
 				}
 	       		try { 
-	       			UpdateMetadata check = new UpdateMetadata(mint); //Updating the metadata
+	       			UpdateMetadata check = new UpdateMetadata(mint); // Else we are updating the metadata
 
 					String update = check.run(mint, false, "EMPTY");
 					
-					if(!MySQLStatements.cacheTransactionExists(signature)) {
-						Aurora.mysql.update("INSERT INTO auroraCache(TRANSACTION) VALUES ('" + signature + "')");
+					
+					if(!MySQLStatements.cacheTransactionExists(signature)) { // Checking if signature wasn't saved already
+						Aurora.mysql.update("INSERT INTO auroraCache(TRANSACTION) VALUES ('" + signature + "')"); //Saving data
 			       		Aurora.mysql.update("UPDATE auroraCache SET TOKEN='" + mint + "'WHERE TRANSACTION='" + signature + "'");
 			       		Aurora.mysql.update("UPDATE auroraCache SET PAID_ROYALTY='" + 0.0 + "'WHERE TRANSACTION='" + signature + "'");
 			       		Aurora.mysql.update("UPDATE auroraCache SET SALE_PRICE='" + nftPrice + "'WHERE TRANSACTION='" + signature + "'");
 			       		Aurora.mysql.update("UPDATE auroraCache SET OWED_ROYALTY='" + owedRoyalty + "'WHERE TRANSACTION='" + signature + "'");
-			       		Aurora.mysql.update("UPDATE auroraCache SET OLD_URI='" + updatedURI + "'WHERE TRANSACTION='" + signature + "'");
+			       		Aurora.mysql.update("UPDATE auroraCache SET OLD_URI='" + updatedURI + "'WHERE TRANSACTION='" + signature + "'"); // Will be used for later usage
 					}
 					
 					if(update.equalsIgnoreCase("ERROR")) { //Couldn't update
@@ -150,6 +159,10 @@ public class CollectionData {
 	       				continue;
 					}
 					else {
+						
+					if(!MySQLStatements.metadataAlreadyChanged(signature)) {	
+					   MySQLStatements.metaDataSaved(signature, mint, updatedURI);
+					}
 		       		System.out.println("Successfully updated metadata for: " + mint);
 		       		System.out.println("Saved new entry with transaction: " + signature);
 		       		
