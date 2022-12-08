@@ -158,7 +158,7 @@ public class CollectionData {
 	       		try { 
 	       			if(!MySQLStatements.cacheTransactionExists(signature)) { // Checking if signature wasn't saved already
 	       				if(!updatedURI.equalsIgnoreCase(Data.default_UriLink) && !updatedURI.contains("locked")) {
-						Aurora.mysql.update("INSERT INTO auroraCache(TRANSACTION) VALUES ('" + signature + "')"); //Saving data
+					Aurora.mysql.update("INSERT INTO auroraCache(TRANSACTION) VALUES ('" + signature + "')"); //Saving data
 			       		Aurora.mysql.update("UPDATE auroraCache SET TOKEN='" + mint + "'WHERE TRANSACTION='" + signature + "'");
 			       		Aurora.mysql.update("UPDATE auroraCache SET PAID_ROYALTY='" + 0.0 + "'WHERE TRANSACTION='" + signature + "'");
 			       		Aurora.mysql.update("UPDATE auroraCache SET SALE_PRICE='" + nftPrice + "'WHERE TRANSACTION='" + signature + "'");
