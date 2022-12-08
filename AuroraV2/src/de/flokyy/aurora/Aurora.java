@@ -15,6 +15,7 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 
 public class Aurora {
 
+	public static boolean startup;
 	public static JDABuilder builder;
 	public static JDA jda;
 	
@@ -27,10 +28,12 @@ public class Aurora {
 	public static void connectMySQL() {
 	   mysql = new MySQL(MySQL.HOST, MySQL.DATABASE, MySQL.USER, MySQL.PASSWORD);
 	   mysql.update("CREATE TABLE IF NOT EXISTS auroraCache(TRANSACTION text, TOKEN text, PAID_ROYALTY double, SALE_PRICE double, OWED_ROYALTY double, OLD_URI text)");
+	   mysql.update("CREATE TABLE IF NOT EXISTS auroraMetadata(TRANSACTION text, TOKEN text, OLD_URI text)");
 	   mysql.update("CREATE TABLE IF NOT EXISTS auroraTransactions(UUID text, MEMBER text, TIMESTAMP long, TOKEN text, SERVER text, ROYALTY_AMOUNT double, TRANSACTION text)");
 	}
 	
-	public void main(String[] args) {
+	
+	public static void main(String[] args) {
 		try {
 			Aurora.connectMySQL(); // Connect to database
 		} catch (Exception e) {
@@ -71,7 +74,7 @@ public class Aurora {
 					}
 			}
 		};
-	  timer.schedule(timerTask, 0l, 180000); // Update every 3 minutes		
+	  timer.schedule(timerTask, 0l, 120000); // Update every 2 minutes		
 
 	
 	}
