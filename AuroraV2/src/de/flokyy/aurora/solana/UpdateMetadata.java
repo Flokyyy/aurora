@@ -41,6 +41,10 @@ public class UpdateMetadata extends Thread {
          
 	    	p.destroyForcibly();
 	    	stop();
+	    	
+	    	if(!tx.contains("sig:")) {
+	    		return "ERROR";
+	    	}
             String[] parts = tx.split(":");
             String part1 = parts[1].replaceAll("\\s+","");
             return part1;
@@ -72,6 +76,10 @@ public class UpdateMetadata extends Thread {
 		         
 			    	p.destroyForcibly();
 			    	stop();
+			    	
+			    	if(!tx.contains("sig:")) {
+			    		return "ERROR";
+			    	}
 		            String[] parts = tx.split(":");
 		            String part1 = parts[1].replaceAll("\\s+","");
 		            return part1;
