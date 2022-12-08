@@ -25,10 +25,9 @@ public class UpdateMetadata extends Thread {
 		try {
 		p = Runtime.getRuntime().exec("metaboss update uri --keypair key.json --account " + token + " --new-uri " + Data.default_UriLink);
 		BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
-	    p.waitFor(1, TimeUnit.MINUTES);
-	    while ((s = br.readLine()) != null) {
-            list.add(s);
-          
+	   	p.waitFor(1, TimeUnit.MINUTES);
+	   	while ((s = br.readLine()) != null) {
+           	list.add(s);
 	    }
 	    
 	    for (int i = 0; i < list.size(); i++) {
@@ -50,16 +49,16 @@ public class UpdateMetadata extends Thread {
             return part1;
           
             
-    } catch (Exception e) {
-	return "ERROR";
-    }
-	
-    }
+	    } catch (Exception e) {
+		return "ERROR";
+	    }
+
+	    }
 		else {
 			try {
 				
-				p = Runtime.getRuntime().exec("metaboss update uri --keypair key.json --account " + token + " --new-uri " + originalURI);
-				BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+			    p = Runtime.getRuntime().exec("metaboss update uri --keypair key.json --account " + token + " --new-uri " + originalURI);
+			    BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
 			    p.waitFor(1, TimeUnit.MINUTES);
 			    while ((s = br.readLine()) != null) {
 		            list.add(s);
