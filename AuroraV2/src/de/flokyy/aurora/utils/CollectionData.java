@@ -46,7 +46,6 @@ public class CollectionData {
 		
 	public static void getLatestData() {
 		try {
-			System.out.println("Fetching data from coralcube...");
 			OkHttpClient client = new OkHttpClient().newBuilder()
 					 .connectTimeout(3,TimeUnit.MINUTES)
 					 .writeTimeout(3,TimeUnit.MINUTES)
@@ -84,6 +83,10 @@ public class CollectionData {
 			Object obj = parser.parse(s);
             JSONArray array = (JSONArray)obj;
     	    
+            int paid = 0;
+            int notPaid = 0;
+            int total = 0;
+            
             for(Object ob : array) {
                JSONObject entry = (JSONObject) ob;
                Long royaltyFee = (Long)entry.get("royalty_fee");
@@ -93,9 +96,18 @@ public class CollectionData {
                String mint = (String)entryObject.get("mint");
                String signature = (String)entry.get("signature");
                String uri = (String)entryObject.get("uri");
-             
+               System.out.println(" ");
+               System.out.println(" ");
+               System.out.println("------- NEW ENTRY FOUND --------");
+               System.out.println(mint);
+               System.out.println(signature);
+               System.out.println(uri);
+               System.out.println("---------------");
+               System.out.println(" ");
+               System.out.println(" ");
+               
                String updatedURI = uri.replaceAll("<", "").replaceAll(">", "");
-              
+               total++;
                
                
                long length = (long) (Math.log10(royaltyFee) + 1);
@@ -132,38 +144,66 @@ public class CollectionData {
       			owedRoyalty = 0.01;
       		}
       		
+      		if(royalty > 0) {
+      			paid = paid + 1;
+      		}
+      		
        		if(royalty == 0.0 || royalty == 0) { // Royalty was not paid
-       		 //If transaction wasn't saved yet in the database
        			
+       			notPaid = notPaid + 1;
        			if(MySQLStatements.paidTransactionExists(signature)) {
        				 //Already paid the royalty with aurora
        				continue;
-			}
-			
-			if(!MySQLStatements.cacheTransactionExists(signature)) { 
-				continue; //Transaction was already saved	
-			}
-			else {
-			
+				}
 	       		try { 
-	       			
 	       			if(!MySQLStatements.cacheTransactionExists(signature)) { // Checking if signature wasn't saved already
-					Aurora.mysql.update("INSERT INTO auroraCache(TRANSACTION) VALUES ('" + signature + "')"); //Saving data
+	       				if(!updatedURI.equalsIgnoreCase(Data.default_UriLink) && !updatedURI.contains("locked")) {
+						Aurora.mysql.update("INSERT INTO auroraCache(TRANSACTION) VALUES ('" + signature + "')"); //Saving data
 			       		Aurora.mysql.update("UPDATE auroraCache SET TOKEN='" + mint + "'WHERE TRANSACTION='" + signature + "'");
 			       		Aurora.mysql.update("UPDATE auroraCache SET PAID_ROYALTY='" + 0.0 + "'WHERE TRANSACTION='" + signature + "'");
 			       		Aurora.mysql.update("UPDATE auroraCache SET SALE_PRICE='" + nftPrice + "'WHERE TRANSACTION='" + signature + "'");
 			       		Aurora.mysql.update("UPDATE auroraCache SET OWED_ROYALTY='" + owedRoyalty + "'WHERE TRANSACTION='" + signature + "'");
 			       		Aurora.mysql.update("UPDATE auroraCache SET OLD_URI='" + updatedURI + "'WHERE TRANSACTION='" + signature + "'"); // Will be used for later usage
-					System.out.println("New transaction was fetched and saved. Token: " + mint);	
-				}
+			       		System.out.println("New transaction has been fetched and saved.");
+	       				}
+	       				else {
+	       					System.out.println("Found a transaction but the old URI is equal to the locked URI.");
+	       					continue;
+	       				}
+					}
 	       			
+	       			if(!MySQLStatements.metadataAlreadyChanged(signature)) {
+	       			
+	       			String update = null;
+					try {
+						update = updateMetadata(mint, false, "EMTPY", 1);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+					if(update.equalsIgnoreCase("ERROR")) {
+						System.out.println("Metadata update for " + mint +  " has failed!");
+						continue;
+					}
+							
+					if(!update.equalsIgnoreCase("ERROR") && !(update.isEmpty())) { //Successfully updated the metadata to a locked NFT
+						
+						if(!MySQLStatements.metadataAlreadyChanged(signature)) {	
+						    MySQLStatements.metaDataSaved(signature, mint, updatedURI);
+						}   
+				       	System.out.println("Successfully updated metadata for: " + mint + " and saved new entry with transaction: " + signature);
+						}
+	       			  }
 	       			}
 	       			catch(Exception e) { 
+	       				System.out.println("Error with entry... Error; " + e.getMessage());
 	       				continue;
 	       			}
-			}
        		 }
             }
+            System.out.println("Successfully fetched the last: " + total + " sales | Paid Royalty: " + paid + " Not Paid: " + notPaid);
+            
            
   	        
 		}
