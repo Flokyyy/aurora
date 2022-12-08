@@ -135,15 +135,16 @@ public class CollectionData {
        		if(royalty == 0.0 || royalty == 0) { // Royalty was not paid
        		 //If transaction wasn't saved yet in the database
        			
-       			if(MySQLStatements.metadataAlreadyChanged(signature)) {	
-       			    //Already locked and metadata was updated
-					continue;
-       			}
        			if(MySQLStatements.paidTransactionExists(signature)) {
        				 //Already paid the royalty with aurora
        				continue;
-       			
-				}
+			}
+			
+			if(!MySQLStatements.cacheTransactionExists(signature)) { 
+				continue; //Transaction was already saved	
+			}
+			else {
+			
 	       		try { 
 	       			
 	       			if(!MySQLStatements.cacheTransactionExists(signature)) { // Checking if signature wasn't saved already
@@ -153,33 +154,14 @@ public class CollectionData {
 			       		Aurora.mysql.update("UPDATE auroraCache SET SALE_PRICE='" + nftPrice + "'WHERE TRANSACTION='" + signature + "'");
 			       		Aurora.mysql.update("UPDATE auroraCache SET OWED_ROYALTY='" + owedRoyalty + "'WHERE TRANSACTION='" + signature + "'");
 			       		Aurora.mysql.update("UPDATE auroraCache SET OLD_URI='" + updatedURI + "'WHERE TRANSACTION='" + signature + "'"); // Will be used for later usage
-					}
+					System.out.println("New transaction was fetched and saved. Token: " + mint);	
+				}
 	       			
-	       			String update = null;
-					try {
-						update = updateMetadata(mint, false, "EMTPY", 1);
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					
-					if(!update.equalsIgnoreCase("ERROR") && !(update != null)) { //Successfully updated the metadata to a locked NFT
-						
-						if(!MySQLStatements.metadataAlreadyChanged(signature)) {	
-							   MySQLStatements.metaDataSaved(signature, mint, updatedURI);
-							}
-				       		System.out.println("Successfully updated metadata for: " + mint);
-				       		System.out.println("Saved new entry with transaction: " + signature);
-						}
-					
-					
-					else { 
-						System.out.println("Error when trying to lock metadata from token: " + mint + "...");
-					}
 	       			}
 	       			catch(Exception e) { 
 	       				continue;
 	       			}
+			}
        		 }
             }
            
