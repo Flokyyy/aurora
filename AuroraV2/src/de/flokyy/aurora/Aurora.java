@@ -67,11 +67,11 @@ public class Aurora {
 			public void run() {
 				try {
 					
-					 CollectionData.getLatestData(); 
-					}
-					catch (Exception e2) {
-						System.out.println("Error when trying to fetch data from the coralcube API.");
-					}
+				CollectionData.getLatestData(); 
+				}
+				catch (Exception e2) {
+				   System.out.println("Error when trying to fetch data from the coralcube API.");
+				}
 			}
 		};
 	  timer.schedule(timerTask, 0l, 120000); // Update every 2 minutes		
