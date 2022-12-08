@@ -80,11 +80,12 @@
 - ![Screenshot (1237)](https://user-images.githubusercontent.com/68162827/205489635-3f80d994-8c9a-4ee8-9440-0b36f34a5320.png)
 
 - Once you provided the transaction Aurora will send you the main details for the payment processs.
-![Screenshot (1261)](https://user-images.githubusercontent.com/68162827/205521135-1f19dc16-f524-4f3d-8810-c8f02b68bd91.png)
+![Screenshot (1263)](https://user-images.githubusercontent.com/68162827/206448232-72edb97d-118d-4c0a-896e-7e22c7170a2b.png)
 
 # 💰 Paid Royalty:
 - If you paid the Royalty Aurora will automatically detect this and will sent the royalty to the projects vault.
 - Aurora will provide the transaction for the funds transaction the the projects vault wallet.
+
 - Your NFT gets automatically unlocked and is ready to use again.
 ![Screenshot (1239)](https://user-images.githubusercontent.com/68162827/205492897-2db8a411-07b0-4b12-b048-09a3268076f5.png)
 
