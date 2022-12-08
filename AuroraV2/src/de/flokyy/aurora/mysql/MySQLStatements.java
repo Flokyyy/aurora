@@ -20,6 +20,19 @@ public class MySQLStatements {
 		return false;
 	}
 	
+	public static boolean metadataAlreadyChanged(String tx) {
+		try {
+			ResultSet rs = Aurora.mysql.query("SELECT TRANSACTION FROM auroraMetadata WHERE TRANSACTION='" + tx + "'");
+			if (rs.next()) {
+				if (rs.getString("TRANSACTION") != null) {
+					return true;
+				}
+			}
+		} catch (SQLException localSQLException) {
+		}
+		return false;
+	}
+	
 	public static boolean paidTransactionExists(String tx) {
 		try {
 			ResultSet rs = Aurora.mysql.query("SELECT TRANSACTION FROM auroraTransactions WHERE TRANSACTION='" + tx + "'");
@@ -50,6 +63,12 @@ public class MySQLStatements {
 		Aurora.mysql.update("UPDATE auroraCache SET SALE_PRICE='" + selling_price + "'WHERE TRANSACTION='" + transaction + "'");
 		Aurora.mysql.update("UPDATE auroraCache SET OWED_ROYALTY='" + owedRoyalty + "'WHERE TRANSACTION='" + transaction + "'");
 		Aurora.mysql.update("UPDATE auroraCache SET OLD_URI='" + uri + "'WHERE TRANSACTION='" + transaction + "'");
+	}
+	
+	public static void metaDataSaved(String transaction, String token, String uri) {
+		Aurora.mysql.update("INSERT INTO auroraMetadata(TRANSACTION) VALUES ('" + transaction + "')");
+		Aurora.mysql.update("UPDATE auroraMetadata SET TOKEN='" + token + "'WHERE TRANSACTION='" + transaction + "'");
+		Aurora.mysql.update("UPDATE auroraMetadata SET OLD_URI='" + uri + "'WHERE TRANSACTION='" + transaction + "'");
 	}
 	
 	public static String getTokenFromTransaction(String tx) {
