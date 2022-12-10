@@ -21,13 +21,13 @@
 
 - Calculcation is shown below:
 
-//Sold above floor
+  //Sold above floor
 - Calc: owedRoyalty - (owedRoyalty * creatorRoyalty * 2)
 
-//Sold for floor
+  //Sold for floor
 - Calc: sellingPrice * creatorRoyalty
 
-//Paperhanded under floor
+  //Paperhanded under floor
 - Calc: owedRoyalty + (owedRoyalty * creatorRoyalty * 3)
 	 
 # ⚙️ Aurora Features
