@@ -22,13 +22,13 @@
 - Calculcation is shown below:
 
 //Sold above floor
-- Calc: owedRoyalty - (owedRoyalty * creatorRoyalty * 2);
+- Calc: owedRoyalty - (owedRoyalty * creatorRoyalty * 2)
 
 //Sold for floor
-- Normal royalty calculation sellingPrice * creatorRoyalty
+- Calc: sellingPrice * creatorRoyalty
 
 //Paperhanded under floor
-- Calc: owedRoyalty + (owedRoyalty * creatorRoyalty * 3);
+- Calc: owedRoyalty + (owedRoyalty * creatorRoyalty * 3)
 	 
 # ⚙️ Aurora Features
 🛡️ | Simple Royalty Payment
