@@ -1,5 +1,5 @@
 ## 💎 Aurora Royalty Enforcement
-- Aurora is a fully automated royalty enforcement tool with On-Chain NFT-Locking and Discord integration for users to pay the project's creator royalty, thereby unlocking their NFT.
+- Aurora is a fully automated royalty enforcement tool with On-Chain NFT-Locking and Discord integration for users to pay the project's creator royalty, thereby unlocking their NFT. Further Aurora now supports a dynamic royalty system which supports above floor buyers and punishes paperhands.
 
 # 📖 Description 
 - Aurora automatically deactivates any NFT in your collection that interacts with an optional royalty marketplace by swapping the image with a warning and replacing the NFT name. Also users are onced their NFT is locked not able to verify for a Holder role of a project. 
@@ -16,6 +16,20 @@
 # 🎉 1 Minute video overview
 - https://www.youtube.com/watch?v=IiQR_q8O7RY
 
+# 🧮 Dynamic Royalty 
+- Users who buy NFTs above floor price need to pay less royalties than users who try to sweep NFT which are being papered (and therefore giving projects less royalties) need to pay more royalties.
+
+- Calculcation is shown below:
+
+//Sold above floor
+- Calc: owedRoyalty - (owedRoyalty * creatorRoyalty * 2);
+
+//Sold for floor
+- Normal royalty calculation sellingPrice * creatorRoyalty
+
+//Paperhanded under floor
+- Calc: owedRoyalty + (owedRoyalty * creatorRoyalty * 3);
+	 
 # ⚙️ Aurora Features
 🛡️ | Simple Royalty Payment
 - You don't want to connect your wallet to any site? No worries we got you covered. 
