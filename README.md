@@ -17,7 +17,7 @@
 - https://www.youtube.com/watch?v=IiQR_q8O7RY
 
 # 🧮 Dynamic Royalty 
-- Users who buy NFTs above floor price need to pay less royalties than users who try to sweep NFT which are being papered (and therefore giving projects less royalties) need to pay more royalties.
+- Users who buy NFTs above floor price need to pay less royalties than users who try to sweep NFT which are being papered (and therefore giving projects less royalties) need to pay more royalties. This is an optional function and can be disabled in the [Data.java](/AuroraV2/src/de/flokyy/aurora/utils/Data.java)
 
 - Calculcation is shown below:
 
