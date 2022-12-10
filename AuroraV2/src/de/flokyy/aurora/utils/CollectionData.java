@@ -1,10 +1,7 @@
 package de.flokyy.aurora.utils;
 
-import java.awt.Color;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.time.Clock;
-import java.time.OffsetDateTime;
 import java.util.concurrent.TimeUnit;
 
 import org.json.simple.JSONArray;
@@ -14,9 +11,6 @@ import org.json.simple.parser.JSONParser;
 import de.flokyy.aurora.Aurora;
 import de.flokyy.aurora.mysql.MySQLStatements;
 import de.flokyy.aurora.solana.UpdateMetadata;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -24,9 +18,15 @@ import okhttp3.Response;
 public class CollectionData {
 
 	 public static double round(double d, int decimalPlace){
-		   BigDecimal bd = new BigDecimal(Double.toString(d));
-		   bd = bd.setScale(decimalPlace,BigDecimal.ROUND_HALF_UP);
-		   return bd.doubleValue();
+	  BigDecimal bd = new BigDecimal(Double.toString(d));
+	  bd = bd.setScale(decimalPlace,BigDecimal.ROUND_HALF_UP);
+	  return bd.doubleValue();
+	}
+	 
+	public static int percent(double a, double b) {
+	   float result = 0.0F;
+	   result = (float)((b - a) * 100.0D / a);
+	   return (int)result;
 	}
 
 	public static String updateMetadata(String token, boolean originalMetadata, String oldURI, int tries) {
@@ -43,7 +43,87 @@ public class CollectionData {
 		}
 		return "ERROR";
 	}
+	
+	//Uses the MagicEden API to get the current floor price of a collection
+	public static Double getCollectionFP(String collection) {
+		try {
+		 
+			OkHttpClient client = new OkHttpClient().newBuilder().build();
+			Request request = new Request.Builder().url("https://api-mainnet.magiceden.dev/v2/collections/" + collection).method("GET", null).build();
+			Response response = null;
+			
+			
+			try {
+				response = client.newCall(request).execute();
+			} catch (IOException e2) {
+				return 0.0;
+			}
+			String s = null;
+			try {
+				s = response.body().string();
+			} catch (IOException e2) {
+				return 0.0;
+			}
 		
+			JSONParser parser = new JSONParser();
+
+			JSONObject json = (JSONObject) parser.parse(s);
+
+			JSONObject jsonObject = (JSONObject) json;
+
+	
+			
+			Object fp = null;
+			
+			try {
+				fp = (Long) jsonObject.get("floorPrice");
+			}
+			catch(Exception e) {
+				return 0.0;
+			}
+				
+				
+				
+			Long fpLong = (Long) fp;
+			long length = (long) (Math.log10(fpLong) + 1);
+			double fpREAL = 0;
+
+			// VOLUME
+			if (length != 0) {
+
+				if (length >= 9) {
+					fpREAL = (fpLong.doubleValue() / 1000000000);
+
+				}
+
+				if (length <= 8) {
+					fpREAL = (fpLong.doubleValue() / 10000000000L);
+
+				}
+			}
+			return fpREAL;
+		}
+		catch(Exception e) {
+			System.out.println("Couldnt fetch FP for: " + collection);
+			return 0.0;
+		}
+
+	}
+	
+	public static Double fetchCollectionFloorPrice(String symbol, int tries) {
+		if(tries != 3) {
+		Double fp =	getCollectionFP(symbol);
+			
+		if(fp == 0.0 || fp == 0 || fp < 0.0) {
+			fetchCollectionFloorPrice(symbol, tries + 1);
+		}
+		else {
+			return fp;
+			}
+		}
+		return 0.0;
+	}
+	
 	public static void getLatestData() {
 		try {
 			OkHttpClient client = new OkHttpClient().newBuilder()
@@ -96,15 +176,6 @@ public class CollectionData {
                String mint = (String)entryObject.get("mint");
                String signature = (String)entry.get("signature");
                String uri = (String)entryObject.get("uri");
-               System.out.println(" ");
-               System.out.println(" ");
-               System.out.println("------- NEW ENTRY FOUND --------");
-               System.out.println(mint);
-               System.out.println(signature);
-               System.out.println(uri);
-               System.out.println("---------------");
-               System.out.println(" ");
-               System.out.println(" ");
                
                String updatedURI = uri.replaceAll("<", "").replaceAll(">", "");
                total++;
@@ -133,12 +204,12 @@ public class CollectionData {
       			 nftPrice = (price.doubleValue() / 1000000000);
       		   }
 
-      			if (lengthNFTPrice <= 8) {
-      				nftPrice = (price.doubleValue() / 10000000000L);
+      		   if (lengthNFTPrice <= 8) {
+      			nftPrice = (price.doubleValue() / 10000000000L);
       			}
       		 }   
       		
-      		Double owedRoyalty = round(nftPrice * Data.creator_royalty, 3);
+      		Double owedRoyalty = round(nftPrice * Data.creator_royalty, 3); //Normal Royalty calculation using the NFT Sale and the Creator Percentage
       		 
       		if(owedRoyalty <= 0.01) {
       			owedRoyalty = 0.01;
@@ -158,22 +229,64 @@ public class CollectionData {
 	       		try { 
 	       			if(!MySQLStatements.cacheTransactionExists(signature)) { // Checking if signature wasn't saved already
 	       				if(!updatedURI.equalsIgnoreCase(Data.default_UriLink) && !updatedURI.contains("locked")) {
-					Aurora.mysql.update("INSERT INTO auroraCache(TRANSACTION) VALUES ('" + signature + "')"); //Saving data
-			       		Aurora.mysql.update("UPDATE auroraCache SET TOKEN='" + mint + "'WHERE TRANSACTION='" + signature + "'");
-			       		Aurora.mysql.update("UPDATE auroraCache SET PAID_ROYALTY='" + 0.0 + "'WHERE TRANSACTION='" + signature + "'");
-			       		Aurora.mysql.update("UPDATE auroraCache SET SALE_PRICE='" + nftPrice + "'WHERE TRANSACTION='" + signature + "'");
-			       		Aurora.mysql.update("UPDATE auroraCache SET OWED_ROYALTY='" + owedRoyalty + "'WHERE TRANSACTION='" + signature + "'");
-			       		Aurora.mysql.update("UPDATE auroraCache SET OLD_URI='" + updatedURI + "'WHERE TRANSACTION='" + signature + "'"); // Will be used for later usage
-			       		System.out.println("New transaction has been fetched and saved.");
+	       					
+	       				
+	       				if(Data.dynamicRoyalty) {
+	       					
+	       					Double fp = CollectionData.fetchCollectionFloorPrice(Data.collection, 1);
+	       					if(fp != 0.0) {
+	       					Aurora.mysql.update("INSERT INTO auroraCache(TRANSACTION) VALUES ('" + signature + "')"); //Saving data		
+	       					int percentage = percent(fp, nftPrice);
+	       					
+	       					if(percentage > 0) { //Sold above floor
+	       						Double dynamicOwedRoyalty = owedRoyalty - (owedRoyalty * Data.creator_royalty * 2);
+	       						Aurora.mysql.update("UPDATE auroraCache SET OWED_ROYALTY='" + dynamicOwedRoyalty + "'WHERE TRANSACTION='" + signature + "'");		
+	       					}
+	       					if(percentage == 0) { //Sold for floor
+	       						Aurora.mysql.update("UPDATE auroraCache SET OWED_ROYALTY='" + owedRoyalty + "'WHERE TRANSACTION='" + signature + "'");	
+	       					}
+	       					if(percentage < 0) { //Paperhanded under floor
+	       						Double dynamicOwedRoyalty = owedRoyalty + (owedRoyalty * Data.creator_royalty * 3);
+	       						Aurora.mysql.update("UPDATE auroraCache SET OWED_ROYALTY='" + dynamicOwedRoyalty + "'WHERE TRANSACTION='" + signature + "'");		
+	       					}
+	       					
+	       					}
+	       					else {
+	       						System.out.println("Couldnt fetch the collections floor price trying again later!");
+	       						continue;
+	       					}
+	       				}
+	       				if(!Data.dynamicRoyalty) {
+	       					Aurora.mysql.update("INSERT INTO auroraCache(TRANSACTION) VALUES ('" + signature + "')"); //Saving data	
+	       					Aurora.mysql.update("UPDATE auroraCache SET OWED_ROYALTY='" + owedRoyalty + "'WHERE TRANSACTION='" + signature + "'");	
+	       				}
+	       				
+				       		Aurora.mysql.update("UPDATE auroraCache SET TOKEN='" + mint + "'WHERE TRANSACTION='" + signature + "'");
+				       		Aurora.mysql.update("UPDATE auroraCache SET PAID_ROYALTY='" + 0.0 + "'WHERE TRANSACTION='" + signature + "'");
+				       		Aurora.mysql.update("UPDATE auroraCache SET SALE_PRICE='" + nftPrice + "'WHERE TRANSACTION='" + signature + "'");
+				       		
+				       		Aurora.mysql.update("UPDATE auroraCache SET OLD_URI='" + updatedURI + "'WHERE TRANSACTION='" + signature + "'"); // Will be used for later usage
+				       		System.out.println("New NFT sale has been fetched and saved.");
+	       					
 	       				}
 	       				else {
 	       					System.out.println("Found a transaction but the old URI is equal to the locked URI.");
 	       					continue;
 	       				}
 					}
+	       			else {
+	       				System.out.println("Transaction already existed.");
+       					continue;
+	       			}
 	       			
 	       			if(!MySQLStatements.metadataAlreadyChanged(signature)) {
 	       			
+	       			if(updatedURI.equalsIgnoreCase(Data.default_UriLink) || updatedURI.contains("locked")) {
+	       				if(!MySQLStatements.metadataAlreadyChanged(signature)) {	
+						MySQLStatements.metaDataSaved(signature, mint, updatedURI);
+						continue;
+					}  
+	       			}
 	       			String update = null;
 					try {
 						update = updateMetadata(mint, false, "EMTPY", 1);
@@ -188,7 +301,6 @@ public class CollectionData {
 					}
 							
 					if(!update.equalsIgnoreCase("ERROR") && !(update.isEmpty())) { //Successfully updated the metadata to a locked NFT
-						
 						if(!MySQLStatements.metadataAlreadyChanged(signature)) {	
 						    MySQLStatements.metaDataSaved(signature, mint, updatedURI);
 						}   
@@ -203,15 +315,10 @@ public class CollectionData {
        		 }
             }
             System.out.println("Successfully fetched the last: " + total + " sales | Paid Royalty: " + paid + " Not Paid: " + notPaid);
-            
-           
-  	        
-		}
-		catch(Exception e) {
-			return;
-		}
-		
-
+			}
+			catch(Exception e) {
+				return;
+			}
 	}	
 
 }
