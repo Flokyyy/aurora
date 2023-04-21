@@ -1,11 +1,11 @@
-## 💎 Aurora Royalty Enforcement
+## Aurora Royalty Enforcement
 - Aurora is a fully automated royalty enforcement tool with On-Chain NFT-Locking and Discord integration for users to pay the project's creator royalty, thereby unlocking their NFT. Further Aurora now supports a dynamic royalty system which supports above floor buyers and punishes paperhands by changing the amount of royalties that are required to pay.
 
-# 📖 Description 
+# Description 
 - Aurora automatically deactivates any NFT in your collection that interacts with an optional royalty marketplace by swapping the image with a warning and replacing the NFT name. Also users are onced their NFT is locked not able to verify for a Holder role of a project. 
 - With the help of our tool, projects can again demand flexible royalties from their users in the long term without giving anyone access to the update-authority, as Aurora is self-hosted and update-authorities therefore stay in the hands of each project.
 
-# 💡 Demo
+# Demo
 - Aurora can be tested inside our developer discord: https://discord.gg/q7pJcPgvKz or the NexiLabs [Discord](https://discord.gg/UeHDvRkv).
 - For the Demo Royalties are paid for: [NexiLabs](https://magiceden.io/marketplace/nexilabs)
 - If you want to live test the tool head over to MagicEden and buy a Nexi Orb without any royalties. The Orb will be locked afterwards. 
@@ -13,10 +13,7 @@
 - Follow the process described in [Royalty Payment Process](https://github.com/Flokyyy/aurora#-royalty-payment-process).
 - Once the Royalty is paid the Orb will be unlocked.
 
-# 🎉 1 Minute video overview
-- https://www.youtube.com/watch?v=IiQR_q8O7RY
-
-# 🧮 Dynamic Royalty 
+# Dynamic Royalty 
 - Users who buy NFTs above floor price need to pay less royalties than users who try to sweep NFT which are being papered (and therefore giving projects less royalties) need to pay more royalties. This is an optional function and can be disabled in the [Data.java](/AuroraV2/src/de/flokyy/aurora/utils/Data.java)
 
 - Calculcation is shown below:
@@ -31,24 +28,24 @@
 - Calc: owedRoyalty + (owedRoyalty * creatorRoyalty * 3)
 	 
 # ⚙️ Aurora Features
-🛡️ | Simple Royalty Payment
+Simple Royalty Payment
 - You don't want to connect your wallet to any site? No worries we got you covered. 
 - With Aurora you can pay the Creator Royalty inside the project's discord by sending a simple transaction to a given wallet. More information is provided in the [Royalty Payment Process](https://github.com/Flokyyy/aurora#-royalty-payment-process).
 
-📙 | Global Support 
+Global Support 
 - Aurora can be used with all Solana collections.
 
-🔑 | Automatic Metadata Update
+Automatic Metadata Update
 - Aurora updates the metadata (URI) so users are forced to pay royalties.
 
-🧊 | Automatic Freeze
+Automatic Freeze
  - Aurora automatically freezes NFTs if the royalty was not paid within a sale on a marketplace. 
  - Aurora uses the [CoralCubeAPI](https://optemization.notion.site/optemization/Coral-Cube-Royalty-API-Documentation-4c37410d75ed40fe84ec212c82e33ac2) to detect if royalties were paid or not.
 
-🔓 | Automatic Unlock
+Automatic Unlock
 - Automatic unlocks the NFT once the Creator Royalty is paid by the user and updates the metadata to the original URI.
 
-🌐 | Database Support
+Database Support
 - Aurora saves all transaction inside a MySQL database for later usage.
 
 # 💻 Installation
@@ -93,14 +90,14 @@
 - Once you provided the transaction Aurora will send you the main details for the payment processs.
 ![Screenshot (1263)](https://user-images.githubusercontent.com/68162827/206448232-72edb97d-118d-4c0a-896e-7e22c7170a2b.png)
 
-# 💰 Paid Royalty:
+# Paid Royalty:
 - If you paid the Royalty Aurora will automatically detect this and will sent the royalty to the projects vault.
 - Aurora will provide the transaction for the funds transaction the the projects vault wallet.
 
 - Your NFT gets automatically unlocked and is ready to use again.
 ![Screenshot (1239)](https://user-images.githubusercontent.com/68162827/205492897-2db8a411-07b0-4b12-b048-09a3268076f5.png)
 
-# ⛔ Royalty not Paid:
+# Royalty not Paid:
 - If you didn't pay the Royalty we implemented a timeout with takes place after 7 minutes.
 ![Screenshot (1191)](https://user-images.githubusercontent.com/68162827/204086620-258bb674-8908-4151-9bc1-072da0498ef3.png)
 
